@@ -146,7 +146,7 @@ class CommissionSettlement(models.Model):
                 ),
             )
             grouped_settlements = [
-                settlement_obj.union(*list(sett))
+                settlement_obj.union(list(sett))
                 for _grouping_keys, sett in settlements
             ]
         else:

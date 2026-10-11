@@ -21,25 +21,4 @@
             />
         </record>
     </data>
-    <data noupdate="1">
-        <record id="rule_invoice_line_agent_multi_company" model="ir.rule">
-            <field name="name">Invoice commission line multi-company</field>
-            <field name="model_id" ref="model_account_invoice_line_agent" />
-            <field name="global" eval="True" />
-            <field
-                name="domain_force"
-            >['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
-        </record>
-        <record id="rule_settlement_all" model="ir.rule">
-            <field name="name">Commission settlements - Sales invoices</field>
-            <field
-                name="groups"
-                eval="[Command.link(ref('group_invoicing_commission'))]"
-            />
-            <field name="model_id" ref="model_commission_settlement" />
-            <field
-                name="domain_force"
-            >[('settlement_type', '=', 'sale_invoice')]</field>
-        </record>
-    </data>
 </odoo>
