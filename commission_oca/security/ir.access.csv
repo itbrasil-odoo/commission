@@ -1,0 +1,11 @@
+id,name,model_id,group_id/id,operation,domain
+access_commission_manager,access_commission_manager,commission,commission_oca.group_commission_manager,crud,
+access_commission,access_commission,commission,commission_oca.group_commission_user,r,
+access_commission_section_manager,access_commission_section_manager,commission.section,commission_oca.group_commission_manager,crud,
+access_commission_section_user,access_commission_section_user,commission.section,commission_oca.group_commission_user,r,
+access_commission_settlement_manager,access_commission_settlement_manager,commission.settlement,commission_oca.group_commission_manager,crud,
+access_commission_settlement_user,access_commission_settlement_user,commission.settlement,commission_oca.group_commission_user,r,
+rule_settlement_multi_company,Commission settlement multi company rule,commission.settlement,,crud,"['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]"
+access_commission_settlement_line_manager,access_commission_settlement_line_manager,commission.settlement.line,commission_oca.group_commission_manager,crud,
+access_commission_settlement_line_user,access_commission_settlement_line_user,commission.settlement.line,commission_oca.group_commission_user,r,
+access_commission_make_settle,access_commission_make_settle,commission.make.settle,commission_oca.group_commission_manager,cru,
