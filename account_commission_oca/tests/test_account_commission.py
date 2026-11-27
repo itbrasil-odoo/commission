@@ -522,3 +522,78 @@ class TestAccountCommission(TestCommissionBase):
             ]
         )
         self.assertEqual(2, len(settlements))
+
+    def test_biweekly_second_half_ends_on_month_end(self):
+        invoice = self._create_invoice(
+            self.agent_biweekly, self.commission_net_invoice, date="2022-01-31"
+        )
+        invoice.invoice_date = "2022-01-31"
+        invoice.date = "2022-01-31"
+        invoice.action_post()
+        self._settle_agent_invoice(agent=self.agent_biweekly, date="2022-02-01")
+        settlement = self.settle_model.search(
+            [("agent_id", "=", self.agent_biweekly.id)]
+        )
+        self.assertEqual(len(settlement), 1)
+        self.assertEqual(str(settlement.date_from), "2022-01-16")
+        self.assertEqual(str(settlement.date_to), "2022-01-31")
+
+    def test_settle_skips_agent_without_period(self):
+        self.agent_monthly.settlement = False
+        wizard = self.make_settle_model.create(
+            self._get_make_settle_vals(agent=self.agent_monthly, date="2022-02-01")
+            | {"settlement_type": "sale_invoice"}
+        )
+        wizard.action_settle()
+        self.assertFalse(
+            self.settle_model.search([("agent_id", "=", self.agent_monthly.id)])
+        )
+
+    def _commission_user(self, *groups):
+        return self.env["res.users"].create(
+            {
+                "name": "Commission access",
+                "login": f"commission_access_{len(groups)}",
+                "group_ids": [(4, self.env.ref(g).id) for g in groups],
+            }
+        )
+
+    def test_user_and_invoicing_groups_write_any_settlement(self):
+        user = self._commission_user(
+            "commission_oca.group_commission_user",
+            "account_commission_oca.group_invoicing_commission",
+        )
+        settlement = self._create_settlement(
+            self.agent_monthly, self.commission_net_invoice
+        )
+        settlement.settlement_type = "manual"
+        settlement.with_user(user).action_cancel()
+        self.assertEqual(settlement.state, "cancel")
+
+    def test_invoicing_group_reads_sale_invoice_settlement_lines(self):
+        user = self._commission_user(
+            "account_commission_oca.group_invoicing_commission"
+        )
+        settlement = self._create_settlement(
+            self.agent_monthly, self.commission_net_invoice
+        )
+        settlement.settlement_type = "sale_invoice"
+        lines = settlement.with_user(user).line_ids
+        self.assertTrue(lines.mapped("commission_id"))
+
+    def test_billing_user_posts_settlement_invoice(self):
+        user = self._commission_user("account.group_account_invoice")
+        settlements = self._create_multi_settlements()
+        invoices = settlements.make_invoices(self.journal, self.commission_product)
+        invoices.invoice_date = fields.Date.today()
+        invoices.with_user(user).action_post()
+        self.assertTrue(all(s.state == "invoiced" for s in settlements))
+
+    def test_invoice_with_inactive_agent_language(self):
+        self.agent_monthly.lang = False
+        settlement = self._create_settlement(
+            self.agent_monthly, self.commission_net_invoice
+        )
+        settlement.settlement_type = "sale_invoice"
+        invoice = settlement.make_invoices(self.journal, self.commission_product)
+        self.assertTrue(invoice.invoice_line_ids)
