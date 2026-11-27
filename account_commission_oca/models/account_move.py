@@ -69,7 +69,8 @@ class AccountMove(models.Model):
 
     def action_post(self):
         """Put settlements associated to the invoices in invoiced state."""
-        self.mapped("line_ids.settlement_id").write({"state": "invoiced"})
+        # Settlement state is bookkeeping: billing users may lack rights on it.
+        self.mapped("line_ids.settlement_id").sudo().write({"state": "invoiced"})
         return super().action_post()
 
     def button_cancel(self):
@@ -80,7 +81,7 @@ class AccountMove(models.Model):
             raise exceptions.ValidationError(
                 self.env._("You can't cancel an invoice with settled lines"),
             )
-        self.mapped("line_ids.settlement_id").write({"state": "except_invoice"})
+        self.mapped("line_ids.settlement_id").sudo().write({"state": "except_invoice"})
         return super().button_cancel()
 
     def recompute_lines_agents(self):
@@ -89,14 +90,14 @@ class AccountMove(models.Model):
     def unlink(self):
         """Put 'invoiced' settlements associated to the invoices back in
         settled state."""
-        self.invoice_line_ids.settlement_id.filtered(
+        self.invoice_line_ids.settlement_id.sudo().filtered(
             lambda s: s.state == "invoiced"
         ).write({"state": "settled"})
         return super().unlink()
 
 
 class AccountMoveLine(models.Model):
-    _inherit = [
+    _inherit = [  # noqa: RUF012
         "account.move.line",
         "commission.mixin",
     ]

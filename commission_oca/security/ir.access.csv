@@ -9,3 +9,4 @@ rule_settlement_multi_company,Commission settlement multi company rule,commissio
 access_commission_settlement_line_manager,access_commission_settlement_line_manager,commission.settlement.line,commission_oca.group_commission_manager,crud,
 access_commission_settlement_line_user,access_commission_settlement_line_user,commission.settlement.line,commission_oca.group_commission_user,r,
 access_commission_make_settle,access_commission_make_settle,commission.make.settle,commission_oca.group_commission_manager,cru,
+rule_settlement_line_multi_company,Commission settlement line multi company rule,commission.settlement.line,,crud,"['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]"

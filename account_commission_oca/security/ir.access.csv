@@ -4,5 +4,9 @@ rule_invoice_line_agent_multi_company,Invoice commission line multi-company,acco
 access_commission,access_commission,commission,account.group_account_invoice,r,
 access_commission_section_user,access_commission_section_user,commission.section,account.group_account_invoice,r,
 access_commission_make_invoice,access_commission_make_invoice,commission.make.invoice,account_commission_oca.group_invoicing_commission,cru,
-rule_settlement_all,Commission settlements - Sales invoices,commission.settlement,account_commission_oca.group_invoicing_commission,crud,"[('settlement_type', '=', 'sale_invoice')]"
+rule_settlement_all,Commission settlements - Sales invoices,commission.settlement,account_commission_oca.group_invoicing_commission,crud,"[] if user.has_group('commission_oca.group_commission_user') else [('settlement_type', '=', 'sale_invoice')]"
+access_settlement_line_invoicing,Commission settlement lines - Sales invoices,commission.settlement.line,account_commission_oca.group_invoicing_commission,r,"[] if user.has_group('commission_oca.group_commission_user') else [('settlement_id.settlement_type', '=', 'sale_invoice')]"
+access_commission_invoicing,access_commission_invoicing,commission,account_commission_oca.group_invoicing_commission,r,
+access_commission_section_invoicing,access_commission_section_invoicing,commission.section,account_commission_oca.group_invoicing_commission,r,
 access_invoice_commission_analysis_report,access_invoice_commission_analysis_report,invoice.commission.analysis.report,account_commission_oca.group_invoicing_commission,r,
+rule_invoice_commission_analysis_multi_company,Commission analysis multi-company,invoice.commission.analysis.report,,r,"['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]"
