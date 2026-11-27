@@ -57,9 +57,11 @@ class CommissionMakeSettle(models.TransientModel):
             if current_date.day == 1:
                 return current_date + relativedelta(days=15)
             else:
+                # First day of the next month: action_settle takes one day
+                # off, so the period ends on the last day of the month.
                 return date(
                     month=current_date.month, year=current_date.year, day=1
-                ) + relativedelta(months=1, days=-1)
+                ) + relativedelta(months=1)
         elif agent.settlement == "quaterly":
             return current_date + relativedelta(months=3)
         elif agent.settlement == "semi":
@@ -97,7 +99,7 @@ class CommissionMakeSettle(models.TransientModel):
             "settlement_id": settlement.id,
         }
 
-    def _get_agent_lines(self, date_to_agent):
+    def _get_agent_lines(self, agent, date_to_agent):
         """Need to be extended according to settlement_type."""
         raise NotImplementedError()
 
@@ -120,6 +122,9 @@ class CommissionMakeSettle(models.TransientModel):
         date_to = self.date_to
         settlement_line_vals = []
         for agent in agents:
+            if not agent.settlement:
+                # No settlement period: nothing to compute the dates from.
+                continue
             date_to_agent = self._get_period_start(agent, date_to)
             # Get non settled elements
             grouped_agent_lines = groupby(

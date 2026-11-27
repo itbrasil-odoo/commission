@@ -93,15 +93,11 @@ class CommissionSettlement(models.Model):
             vals.update({"invoice_date": date})
         for settlement in self:
             # Put period string
-            lang = self.env["res.lang"].search(
-                [
-                    (
-                        "code",
-                        "=",
-                        self.agent_id.lang or self.env.context.get("lang", "en_US"),
-                    )
-                ]
-            )
+            Lang = self.env["res.lang"]
+            lang = Lang._get_data(code=settlement.agent_id.lang or self.env.lang)
+            if not lang.code:
+                lang = Lang._get_data(code=self.env.lang or "en_US")
+            date_format = lang.date_format or "%m/%d/%Y"
             date_from = fields.Date.from_string(settlement.date_from)
             date_to = fields.Date.from_string(settlement.date_to)
             vals["invoice_line_ids"].append(
@@ -110,12 +106,14 @@ class CommissionSettlement(models.Model):
                         "product_id": product.id,
                         "quantity": -1 if settlement.total < 0 else 1,
                         "price_unit": abs(settlement.total),
-                        "name": product.with_context(lang=lang.code).display_name
+                        "name": product.with_context(
+                            lang=lang.code or self.env.lang
+                        ).display_name
                         + "\n"
                         + settlement.env._(
                             "Period: from %(date_from)s to %(date_to)s",
-                            date_from=date_from.strftime(lang.date_format),
-                            date_to=date_to.strftime(lang.date_format),
+                            date_from=date_from.strftime(date_format),
+                            date_to=date_to.strftime(date_format),
                         ),
                         # todo or compute agent currency_id?
                         "currency_id": settlement.currency_id.id,

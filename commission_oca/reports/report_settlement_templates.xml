@@ -10,9 +10,6 @@
             />
         </t>
         <t t-call="web.external_layout" address="address">
-            <div class="row">
-                <div class="offset-col-6 col-6" name="address" />
-            </div>
             <div class="mt-5">
                 <div class="page">
                     <h2>Settlement</h2>
