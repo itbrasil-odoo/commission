@@ -45,7 +45,7 @@ class SaleOrder(models.Model):
 
 
 class SaleOrderLine(models.Model):
-    _inherit = [
+    _inherit = [  # noqa: RUF012
         "sale.order.line",
         "commission.mixin",
     ]

@@ -4,8 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 19.0\n"
+"Project-Id-Version: Odoo Server 20.0\n"
 "Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-11-27 18:17+0000\n"
+"PO-Revision-Date: 2026-11-27 18:17+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -72,6 +74,11 @@ msgstr ""
 #. module: commission_oca
 #: model:ir.model.fields,field_description:commission_oca.field_commission_settlement__activity_exception_decoration
 msgid "Activity Exception Decoration"
+msgstr ""
+
+#. module: commission_oca
+#: model:ir.model.fields,field_description:commission_oca.field_commission_settlement__activity_plans_ids
+msgid "Activity Plans"
 msgstr ""
 
 #. module: commission_oca
@@ -351,11 +358,6 @@ msgid "Followers (Partners)"
 msgstr ""
 
 #. module: commission_oca
-#: model:ir.model.fields,help:commission_oca.field_commission_settlement__activity_type_icon
-msgid "Font awesome icon e.g. fa-tasks"
-msgstr ""
-
-#. module: commission_oca
 #: model:ir.model.fields,field_description:commission_oca.field_product_product__commission_free
 #: model:ir.model.fields,field_description:commission_oca.field_product_template__commission_free
 msgid "Free of commission"
@@ -459,6 +461,11 @@ msgid "Margin (Amount - Cost)"
 msgstr ""
 
 #. module: commission_oca
+#: model:ir.model.fields,help:commission_oca.field_commission_settlement__activity_type_icon
+msgid "Material Symbols icon e.g. checklist"
+msgstr ""
+
+#. module: commission_oca
 #: model:ir.model.fields,field_description:commission_oca.field_commission_settlement__message_has_error
 msgid "Message Delivery error"
 msgstr ""
@@ -510,6 +517,11 @@ msgstr ""
 #. module: commission_oca
 #: model:ir.model.fields,field_description:commission_oca.field_commission_settlement__activity_type_id
 msgid "Next Activity Type"
+msgstr ""
+
+#. module: commission_oca
+#: model:res.groups.privilege,placeholder:commission_oca.res_groups_privilege_commission
+msgid "No"
 msgstr ""
 
 #. module: commission_oca
@@ -778,16 +790,6 @@ msgstr ""
 #. module: commission_oca
 #: model:res.groups,name:commission_oca.group_commission_user
 msgid "User"
-msgstr ""
-
-#. module: commission_oca
-#: model:ir.model.fields,field_description:commission_oca.field_commission_settlement__website_message_ids
-msgid "Website Messages"
-msgstr ""
-
-#. module: commission_oca
-#: model:ir.model.fields,help:commission_oca.field_commission_settlement__website_message_ids
-msgid "Website communication history"
 msgstr ""
 
 #. module: commission_oca
